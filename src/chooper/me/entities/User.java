@@ -9,6 +9,9 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
+/**
+ * An entity with a digital signature.
+ */
 public class User {
 	
 	/** private key */
@@ -17,13 +20,12 @@ public class User {
 	/** public key */
 	private PublicKey publicKey;
 	
+	/** Algorithm for key public/private generation */
 	private static final String keyGenAlgo = "DSA";
 	
+	/** Algorithm for signatures */
 	private static final String signAlgo = "SHA1withDSA";
-	
-	/**
-	 * @param keyGen private/public key generator algorithm
-	 */
+
 	public User() {
 		KeyPairGenerator keyGen = null;
 		try {
