@@ -26,5 +26,23 @@ public class CoinConsume {
 		this.index = index;
 		this.user = user;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CoinConsume)) return false;
+		CoinConsume otherCoin = (CoinConsume) obj;
+		return otherCoin.blockId == blockId && otherCoin.index == index
+				&& otherCoin.user == user;
+	}
+	
+	@Override
+	public String toString() {
+		return blockId + "(" + index + ")" + user;
+	}
+	
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
 
 }

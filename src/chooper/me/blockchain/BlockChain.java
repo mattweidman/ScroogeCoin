@@ -2,6 +2,7 @@ package chooper.me.blockchain;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 /**
  * Linked list data structure with hash pointers.
@@ -11,11 +12,11 @@ public class BlockChain {
 	/** HashPointer to original block. */
 	private HashPointer binding;
 	
-	/** Counter for providing different ids for each block */
-	private int idCounter = 0;
-	
 	/** Hashing algorithm for this blockchain */
 	private MessageDigest hashAlgo;
+	
+	/** Way of finding message given its block id */
+	private ArrayList<Message> idToMessages;
 	
 	public BlockChain() {
 		try {
@@ -27,6 +28,7 @@ public class BlockChain {
 			System.exit(1);
 		}
 		binding = new HashPointer(new MessageBase(hashAlgo));
+		idToMessages = new ArrayList<>();
 	}
 	
 	/**
@@ -37,20 +39,30 @@ public class BlockChain {
 	}
 	
 	/**
-	 * Append a new block to this blockchain.
-	 * @param contents contents of new block
-	 */
-	public void append(Message contents) {
-		MessageBlock block = new MessageBlock(idCounter, binding, contents, hashAlgo);
-		idCounter++;
-		binding = new HashPointer(block);
-	}
-	
-	/**
 	 * @return the generated SHA-256 instance
 	 */
 	public MessageDigest getHashingAlgorithm() {
 		return hashAlgo;
+	}
+	
+	/**
+	 * Append a new block to this blockchain.
+	 * @param contents contents of new block
+	 */
+	public void append(Message contents) {
+		MessageBlock block = new MessageBlock(idToMessages.size(), binding, 
+				contents, hashAlgo);
+		binding = new HashPointer(block);
+		idToMessages.add(contents);
+	}
+	
+	/**
+	 * Get a previous message.
+	 * @param blockId id of block/message
+	 * @throws IndexOutOfBoundsException id out of range
+	 */
+	public Message getMessage(int blockId) throws IndexOutOfBoundsException {
+		return idToMessages.get(blockId);
 	}
 
 }
