@@ -43,5 +43,68 @@ public class Tests {
 				Utilities.intToBytes(billyG.hashCode()));
 		assertArrayEquals(expBytes, tx.serialize());
 	}
+	
+	@Test
+	public void testLedger() {
+		User admin = new User();
+		Ledger ledger = new Ledger(admin);
+		
+		// create $100
+		Transaction t = new Transaction();
+		t.createCoin(100, admin);
+		assert !ledger.createMoney(t);
+		t.sign(admin);
+		assert t.verifySigned(admin);
+		assert ledger.createMoney(t);
+		
+		// give $75 to Alice
+		User alice = new User();
+		t = new Transaction();
+		t.createCoin(75, alice); // $75
+		t.consumeCoin(0, 0, admin); // $100
+		t.sign(admin);
+		t.sign(alice);
+		assert !ledger.submitTransaction(t);
+		t.createCoin(25, admin); // need $75 + $25 = $100
+		assert !ledger.submitTransaction(t);
+		t.sign(admin); // need to sign again because message chanaged
+		assert ledger.submitTransaction(t);
+		
+		// Alice tries to give to both Bob and Chuck
+		User bob = new User();
+		User chuck = new User();
+		t = new Transaction();
+		t.createCoin(75, bob);
+		t.createCoin(75, chuck);
+		t.consumeCoin(1, 0, alice);
+		t.sign(alice);
+		assert !ledger.submitTransaction(t);
+		
+		// using a bitcoin that isn't yours
+		t = new Transaction();
+		t.consumeCoin(1, 0, bob);
+		t.createCoin(75, chuck);
+		t.sign(bob);
+		assert !ledger.submitTransaction(t);
+		
+		// using a coin that is spent already
+		t = new Transaction();
+		t.consumeCoin(1, 0, alice);
+		t.createCoin(75, bob);
+		t.sign(alice);
+		assert ledger.submitTransaction(t);
+		t = new Transaction();
+		t.consumeCoin(1, 0, alice);
+		t.createCoin(75, chuck);
+		t.sign(alice);
+		assert !ledger.submitTransaction(t);
+		
+		// using coins that were never created
+		t = new Transaction();
+		t.consumeCoin(4, 8, alice);
+		t.createCoin(75, chuck);
+		t.sign(alice);
+		assert !ledger.submitTransaction(t);
+	}
 
 }

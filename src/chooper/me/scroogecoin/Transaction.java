@@ -1,8 +1,10 @@
 package chooper.me.scroogecoin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import chooper.me.blockchain.Message;
 import chooper.me.blockchain.Utilities;
@@ -16,9 +18,13 @@ public class Transaction extends Message {
 	/** Ids of coins consumed */
 	private List<CoinConsume> consumedCoins;
 	
+	/** Signatures of payers */
+	private HashMap<User, byte[]> signatures;
+	
 	public Transaction() {
 		createdCoins = new ArrayList<>();
 		consumedCoins = new LinkedList<>();
+		signatures = new HashMap<>();
 	}
 
 	@Override
@@ -80,6 +86,34 @@ public class Transaction extends Message {
 	public void consumeCoin(int blockId, int index, User user) {
 		CoinConsume coin = new CoinConsume(blockId, index, user);
 		consumedCoins.add(coin);
+	}
+	
+	/**
+	 * Signs this transaction. All signing should happen AFTER
+	 * all payments/recipients have been registered.
+	 * @param user user signing this transaction
+	 */
+	public void sign(User user) {
+		byte[] signature = user.sign(this.serialize());
+		signatures.put(user, signature);
+	}
+	
+	/**
+	 * Verify whether a user signed this transaction.
+	 * @param user signer in question
+	 * @return true if user signed this transaction
+	 */
+	public boolean verifySigned(User user) {
+		return signatures.containsKey(user) &&
+			user.verify(this.serialize(), signatures.get(user));
+	}
+	
+	/**
+	 * Get all the signatures on this transaction.
+	 * @return user -> signature mapping
+	 */
+	public Map<User, byte[]> getSignatures() {
+		return signatures;
 	}
 	
 	/**
