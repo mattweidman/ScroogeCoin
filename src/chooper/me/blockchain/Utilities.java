@@ -8,6 +8,10 @@ public class Utilities {
 		return ByteBuffer.allocate(Integer.SIZE / 8).putInt(x).array();
 	}
 	
+	public static byte[] doubleToBytes(double x) {
+		return ByteBuffer.allocate(Double.SIZE / 8).putDouble(x).array();
+	}
+	
 	public static byte[] concatenateArrays(byte[]... arrs) {
 		int numBytes = 0;
 		for (byte[] arr : arrs) numBytes += arr.length;

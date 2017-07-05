@@ -21,10 +21,10 @@ public class User {
 	private PublicKey publicKey;
 	
 	/** Algorithm for key public/private generation */
-	private static final String keyGenAlgo = "DSA";
+	public static final String keyGenAlgo = "DSA";
 	
 	/** Algorithm for signatures */
-	private static final String signAlgo = "SHA1withDSA";
+	public static final String signAlgo = "SHA1withDSA";
 	
 	/** Signature-making object */
 	private Signature signer;
@@ -45,8 +45,8 @@ public class User {
 	}
 	
 	/** get public key */
-	public PublicKey getPublicKey() {
-		return publicKey;
+	public byte[] getPublicKey() {
+		return publicKey.getEncoded();
 	}
 	
 	/**

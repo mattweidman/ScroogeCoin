@@ -76,11 +76,11 @@ public class Tests {
 		assertBlock(prev1.getPointer(), "Hello ", 0, prev1.getHash());
 	}
 	
-	private MessageBlock assertBlock(MessageHashable m, String expName, int expID, byte[] expHash) {
+	private MessageBlock assertBlock(MessageHashable m, String expName, int expId, byte[] expHash) {
 		assert m instanceof MessageBlock;
 		MessageBlock block = (MessageBlock) m;
 		assertArrayEquals(expName.getBytes(), block.getContents().serialize());
-		assertEquals(expID, block.getID());
+		assertEquals(expId, block.getID());
 		assertArrayEquals(expHash, block.getHash());
 		return block;
 	}

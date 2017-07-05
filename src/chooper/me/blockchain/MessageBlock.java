@@ -8,7 +8,7 @@ import java.security.MessageDigest;
 public class MessageBlock extends MessageHashable {
 	
 	/** ID of block */
-	private int blockID;
+	private int blockId;
 	
 	/** pointer and hash to previous block */
 	private HashPointer previous;
@@ -25,14 +25,14 @@ public class MessageBlock extends MessageHashable {
 	 */
 	public MessageBlock(int id, HashPointer prev, Message cont, MessageDigest hashAlgo) {
 		super(hashAlgo);
-		blockID = id;
+		blockId = id;
 		contents = cont;
 		previous = prev;
 	}
 	
 	@Override
 	public byte[] serialize() {
-		byte[] idBytes = Utilities.intToBytes(blockID);
+		byte[] idBytes = Utilities.intToBytes(blockId);
 		byte[] refBytes = Utilities.intToBytes(previous.getPointer().hashCode());
 		byte[] hashBytes = previous.getHash();
 		byte[] contentBytes = contents.serialize();
@@ -40,7 +40,7 @@ public class MessageBlock extends MessageHashable {
 	}
 	
 	/** get ID of block */
-	public int getID() { return blockID; }
+	public int getID() { return blockId; }
 	
 	/** get pointer and hash to previous block */
 	public HashPointer getPrevious() { return previous; }
