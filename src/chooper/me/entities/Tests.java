@@ -13,7 +13,7 @@ public class Tests {
 		byte[] signature = user.sign(message);
 		assert user.verify(message, signature);
 		
-		byte[] fakeMessage = "fake signature".getBytes();
+		byte[] fakeMessage = "Hello world!".getBytes();
 		assert !user.verify(fakeMessage, signature);
 	}
 

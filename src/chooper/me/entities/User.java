@@ -25,10 +25,15 @@ public class User {
 	
 	/** Algorithm for signatures */
 	private static final String signAlgo = "SHA1withDSA";
+	
+	/** Signature-making object */
+	private Signature signer;
 
 	public User() {
+		signer = null;
 		KeyPairGenerator keyGen = null;
 		try {
+			signer = Signature.getInstance(signAlgo);
 			keyGen = KeyPairGenerator.getInstance(keyGenAlgo);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
@@ -52,11 +57,10 @@ public class User {
 	 */
 	public byte[] sign(byte[] message) {
 		try {
-			Signature signer = Signature.getInstance(signAlgo);
 			signer.initSign(privateKey);
 			signer.update(message);
 			return signer.sign();
-		} catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
+		} catch (SignatureException | InvalidKeyException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -72,11 +76,10 @@ public class User {
 	 */
 	public boolean verify(byte[] message, byte[] signature) {
 		try {
-			Signature signer = Signature.getInstance(signAlgo);
 			signer.initVerify(publicKey);
 			signer.update(message);
 			return signer.verify(signature);
-		} catch (NoSuchAlgorithmException | SignatureException | InvalidKeyException e) {
+		} catch (SignatureException | InvalidKeyException e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
