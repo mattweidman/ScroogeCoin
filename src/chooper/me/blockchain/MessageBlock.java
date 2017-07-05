@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 /**
  * Fundamental unit of a blockchain.
  */
-public class Block extends Message {
+public class MessageBlock extends MessageHashable {
 	
 	/** ID of block */
 	private int blockID;
@@ -14,16 +14,16 @@ public class Block extends Message {
 	private HashPointer previous;
 	
 	/** contents of this block */
-	private byte[] contents;
+	private Message contents;
 	
 	/**
 	 * Create a new block for a blockchain.
 	 * @param id id of block
 	 * @param prev has and pointer to previous block
-	 * @param cont contents of block
+	 * @param cont message holding contents of block
 	 * @param hashAlgo hashing algorithm, preferably SHA-256
 	 */
-	public Block(int id, HashPointer prev, byte[] cont, MessageDigest hashAlgo) {
+	public MessageBlock(int id, HashPointer prev, Message cont, MessageDigest hashAlgo) {
 		super(hashAlgo);
 		blockID = id;
 		contents = cont;
@@ -35,7 +35,8 @@ public class Block extends Message {
 		byte[] idBytes = Utilities.intToBytes(blockID);
 		byte[] refBytes = Utilities.intToBytes(previous.getPointer().hashCode());
 		byte[] hashBytes = previous.getHash();
-		return Utilities.concatenateArrays(idBytes, refBytes, hashBytes, contents);
+		byte[] contentBytes = contents.serialize();
+		return Utilities.concatenateArrays(idBytes, refBytes, hashBytes, contentBytes);
 	}
 	
 	/** get ID of block */
@@ -45,6 +46,6 @@ public class Block extends Message {
 	public HashPointer getPrevious() { return previous; }
 	
 	/** get contents of this block */
-	public byte[] getContents() { return contents; }
+	public Message getContents() { return contents; }
 
 }

@@ -46,8 +46,8 @@ public class Tests {
 		assertArrayEquals(hashAlgo.digest(b1), hashAlgo.digest(b2));
 		
 		// make sure two base messages have the same hash
-		BaseMessage bm1 = new BaseMessage(hashAlgo);
-		BaseMessage bm2 = new BaseMessage(hashAlgo);
+		MessageBase bm1 = new MessageBase(hashAlgo);
+		MessageBase bm2 = new MessageBase(hashAlgo);
 		assertArrayEquals(bm1.getHash(), bm2.getHash());
 	}
 	
@@ -56,30 +56,30 @@ public class Tests {
 		BlockChain chain = new BlockChain();
 		
 		// nothing has been added to blockchain
-		assert chain.getBinding().getPointer() instanceof BaseMessage;
-		byte[] emptyHash = new BaseMessage(chain.getHashingAlgorithm()).getHash();
+		assert chain.getBinding().getPointer() instanceof MessageBase;
+		byte[] emptyHash = new MessageBase(chain.getHashingAlgorithm()).getHash();
 		assertArrayEquals(emptyHash, chain.getBinding().getHash());
 		
 		// one element in blockchain
-		chain.append("Hello ".getBytes());
-		Block block0 = assertBlock(chain.getBinding().getPointer(), "Hello ", 0, 
+		chain.append(new MessageString("Hello "));
+		MessageBlock block0 = assertBlock(chain.getBinding().getPointer(), "Hello ", 0, 
 				chain.getBinding().getHash());
 		HashPointer prev0 = block0.getPrevious();
-		assert prev0.getPointer() instanceof BaseMessage;
+		assert prev0.getPointer() instanceof MessageBase;
 		assertArrayEquals(emptyHash, prev0.getHash());
 		
 		// two elements in blockchain
-		chain.append("world".getBytes());
-		Block block1 = assertBlock(chain.getBinding().getPointer(), "world", 1,
+		chain.append(new MessageString("world"));
+		MessageBlock block1 = assertBlock(chain.getBinding().getPointer(), "world", 1,
 				chain.getBinding().getHash());
 		HashPointer prev1 = block1.getPrevious();
 		assertBlock(prev1.getPointer(), "Hello ", 0, prev1.getHash());
 	}
 	
-	private Block assertBlock(Message m, String expName, int expID, byte[] expHash) {
-		assert m instanceof Block;
-		Block block = (Block) m;
-		assertArrayEquals(expName.getBytes(), block.getContents());
+	private MessageBlock assertBlock(MessageHashable m, String expName, int expID, byte[] expHash) {
+		assert m instanceof MessageBlock;
+		MessageBlock block = (MessageBlock) m;
+		assertArrayEquals(expName.getBytes(), block.getContents().serialize());
 		assertEquals(expID, block.getID());
 		assertArrayEquals(expHash, block.getHash());
 		return block;

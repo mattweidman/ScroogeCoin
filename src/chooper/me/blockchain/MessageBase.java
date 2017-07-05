@@ -5,9 +5,9 @@ import java.security.MessageDigest;
 /**
  * Block in a blockchain that doesn't point to anything.
  */
-public class BaseMessage extends Message {
+public class MessageBase extends MessageHashable {
 	
-	public BaseMessage(MessageDigest hashAlgo) {
+	public MessageBase(MessageDigest hashAlgo) {
 		super(hashAlgo);
 	}
 

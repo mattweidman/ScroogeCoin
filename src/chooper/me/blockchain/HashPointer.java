@@ -3,7 +3,7 @@ package chooper.me.blockchain;
 public class HashPointer {
 	
 	/** reference to some message */
-	private Message pointer;
+	private MessageHashable pointer;
 	
 	/** hash of the message */
 	private byte[] hash;
@@ -12,7 +12,7 @@ public class HashPointer {
 	 * Generate a hash pointer to a message.
 	 * @param m Message to record and hash. 
 	 */
-	public HashPointer(Message m) {
+	public HashPointer(MessageHashable m) {
 		pointer = m;
 		hash = m.getHash();
 	}
@@ -21,6 +21,6 @@ public class HashPointer {
 	public byte[] getHash() { return hash; }
 	
 	/** get reference to message */
-	public Message getPointer() { return pointer; }
+	public MessageHashable getPointer() { return pointer; }
 	
 }

@@ -26,7 +26,7 @@ public class BlockChain {
 			nsae.printStackTrace();
 			System.exit(1);
 		}
-		binding = new HashPointer(new BaseMessage(hashAlgo));
+		binding = new HashPointer(new MessageBase(hashAlgo));
 	}
 	
 	/**
@@ -40,8 +40,8 @@ public class BlockChain {
 	 * Append a new block to this blockchain.
 	 * @param contents contents of new block
 	 */
-	public void append(byte[] contents) {
-		Block block = new Block(idCounter, binding, contents, hashAlgo);
+	public void append(Message contents) {
+		MessageBlock block = new MessageBlock(idCounter, binding, contents, hashAlgo);
 		idCounter++;
 		binding = new HashPointer(block);
 	}
