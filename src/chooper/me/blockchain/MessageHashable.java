@@ -17,11 +17,6 @@ public abstract class MessageHashable extends Message {
 	}
 	
 	/**
-	 * @return serialized representation of everything inside this message
-	 */
-	public abstract byte[] serialize();
-	
-	/**
 	 * @return hash of this message
 	 */
 	public byte[] getHash() {
